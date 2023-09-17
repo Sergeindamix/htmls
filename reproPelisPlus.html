@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reproductor de Videos</title>
+</head>
+<body>
+    <h1>Reproductor de Videos</h1>
+    <label for="videoSelect">Selecciona un video:</label>
+    <select id="videoSelect">
+        <option value="">Selecciona un video</option>
+    </select>
+    <br>
+    <button id="playButton">Reproducir</button>
+    <br>
+    <iframe id="videoFrame" width="800" height="450" frameborder="0" allowfullscreen></iframe>
+    <br>
+    <input type="file" id="jsonFileInput" accept=".json">
+    <button id="loadJsonButton">Cargar Lista JSON</button>
+
+    <script>
+        const videoSelect = document.getElementById('videoSelect');
+        const playButton = document.getElementById('playButton');
+        const videoFrame = document.getElementById('videoFrame');
+        const jsonFileInput = document.getElementById('jsonFileInput');
+        const loadJsonButton = document.getElementById('loadJsonButton');
+
+        playButton.addEventListener('click', () => {
+            const selectedUrl = videoSelect.value;
+            if (selectedUrl) {
+                videoFrame.src = selectedUrl;
+            } else {
+                alert('Selecciona un video para reproducir.');
+            }
+        });
+
+        videoSelect.addEventListener('change', () => {
+            const selectedUrl = videoSelect.value;
+            if (selectedUrl) {
+                videoFrame.src = selectedUrl;
+            }
+        });
+
+        loadJsonButton.addEventListener('click', () => {
+            jsonFileInput.click();
+        });
+
+        jsonFileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const jsonData = JSON.parse(event.target.result);
+                    populateVideoOptions(jsonData.links);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function populateVideoOptions(links) {
+            videoSelect.innerHTML = '<option value="">Selecciona un video</option>';
+            links.forEach(link => {
+                const option = document.createElement('option');
+                option.value = link.url;
+                option.textContent = `Video (${link.server}) - ${link.quality}`;
+                videoSelect.appendChild(option);
+            });
+        }
+
+        // Llenar la lista desplegable con los enlaces proporcionados
+        const initialData = {
+            "links": [
+                {
+                    "__typename": "Video",
+                    "language": "lat",
+                    "url": "https://pelisplus.esplay.one/player.html#64dbeab377fd0a678e458776",
+                    "quality": "1080p",
+                    "sandbox": true,
+                    "type": "free",
+                    "server": "esplay",
+                    "updatedAt": 1692134389699,
+                    "status": true
+                },
+                {
+                    "__typename": "Video",
+                    "language": "lat",
+                    "url": "https://uqload.com/embed-dbpo7ynq3ojk.html",
+                    "quality": "1080p",
+                    "sandbox": false,
+                    "type": "free",
+                    "server": "uqload",
+                    "updatedAt": 1692134389699,
+                    "status": true
+                },
+                {
+                    "__typename": "Video",
+                    "language": "lat",
+                    "url": "https://dood.so/e/9s52f23ocqar",
+                    "quality": "1080p",
+                    "sandbox": false,
+                    "type": "free",
+                    "server": "dood",
+                    "updatedAt": 1692134389699,
+                    "status": true
+                },
+                {
+                    "__typename": "Video",
+                    "language": "lat",
+                    "url": "https://streamtape.com/e/0BBXxqvlb8HbdoG",
+                    "quality": "1080p",
+                    "sandbox": false,
+                    "type": "free",
+                    "server": "streamtape",
+                    "updatedAt": 1692134389699,
+                    "status": true
+                }
+            ]
+        };
+
+        populateVideoOptions(initialData.links);
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+
+<html>
+    <head>
+        <!-- include the three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- create a div element for the renderer -->
+<div id="container"></div>
+<script>
+// create a scene
+var scene = new THREE.Scene();
+// create a camera
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+// create a renderer
+var renderer = new THREE.WebGLRenderer();
+// set the size of the renderer
+renderer.setSize(window.innerWidth, window.innerHeight);
+// add the renderer to the document body
+document.body.appendChild(renderer.domElement);
+// create a box geometry
+var geometry = new THREE.BoxGeometry(5, 5, 5);
+// create a texture loader
+var loader = new THREE.TextureLoader();
+// load a texture from Unsplash
+var texture = loader.load('https://source.unsplash.com/random/' + Math.random());
+// create a material with the texture
+var material = new THREE.MeshBasicMaterial({map: texture});
+// create a mesh
+var box = new THREE.Mesh(geometry, material);
+// add the mesh to the scene
+scene.add(box);
+// create an ambient light
+var ambientLight = new THREE.AmbientLight(0x404040);
+// add the ambient light to the scene
+scene.add(ambientLight);
+// create a directional light
+var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+// set the position of the directional light
+directionalLight.position.set(1, 1, 1);
+// add the directional light to the scene
+scene.add(directionalLight);
+// set the position of the camera
+camera.position.z = 20;
+// create a function to animate the scene
+function animate() {
+  // request the next animation frame
+  requestAnimationFrame(animate);
+  // render the scene
+  renderer.render(scene, camera);
+}
+// call the animate function
+animate();
+// create a function to tween the box
+function tweenBox() {
+  // create a random position
+  var position = {
+    x: Math.random() * 20 - 10,
+    y: Math.random() * 20 - 10,
+    z: Math.random() * 20 - 10
+  };
+  // create a random rotation
+  var rotation = {
+    x: Math.random() * Math.PI * 2,
+    y: Math.random() * Math.PI * 2,
+    z: Math.random() * Math.PI * 2
+  };
+  // create a random scale
+  var scale = {
+    x: Math.random() * 2 + 0.5,
+    y: Math.random() * 2 + 0.5,
+    z: Math.random() * 2 + 0.5
+  };
+  // create a random color
+  var color = Math.random() * 0xffffff;
+  // create a tween for the position
+  var positionTween = TweenMax.to(box.position, 2, position);
+  // create a tween for the rotation
+  var rotationTween = TweenMax.to(box.rotation, 2, rotation);
+  // create a tween for the scale
+  var scaleTween = TweenMax.to(box.scale, 2, scale);
+  // create a tween for the color
+  var colorTween = TweenMax.to(box.material.color, 2, {r: color.r, g: color.g, b: color.b});
+  // create a timeline to combine the tweens
+  var timeline = new TimelineMax();
+  // add the tweens to the timeline
+  timeline.add(positionTween);
+  timeline.add(rotationTween);
+  timeline.add(scaleTween);
+  timeline.add(colorTween);
+  // repeat the timeline indefinitely
+  timeline.repeat(-1);
+  // return the timeline
+  return timeline;
+}
+// create a timeline for the box
+var boxTimeline = tweenBox();
+// create a function to create more boxes
+function createBoxes(n) {
+  // create an array to store the boxes
+  var boxes = [];
+  // loop n times
+  for (var i = 0; i < n; i++) {
+    // create a box geometry
+    var geometry = new THREE.BoxGeometry(5, 5, 5);
+    // create a standard material with a random color
+    var material = new THREE.MeshStandardMaterial({color: Math.random() * 0xffffff});
+    // create a mesh
+    var box = new THREE.Mesh(geometry, material);
+    // add the mesh to the scene
+    scene.add(box);
+    // push the box to the array
+    boxes.push(box);
+    // create a timeline for the box
+    var boxTimeline = tweenBox();
+  }
+  // return the array
+  return boxes;
+}
+// create 10 boxes
+var boxes = createBoxes(10);
+// create a function to make the boxes move in a pattern
+function moveBoxes() {
+  // loop through the boxes
+  for (var i = 0; i < boxes.length; i++) {
+    // get the current box
+    var box = boxes[i];
+    // get the current position
+    var position = box.position;
+    // get the current rotation
+    var rotation = box.rotation;
+    // calculate the new position
+    var newPosition = {
+      x: Math.sin(position.x + rotation.y) * 10,
+      y: Math.cos(position.y + rotation.x) * 10,
+      z: Math.sin(position.z + rotation.z) * 10
+    };
+    // create a tween for the position
+    var positionTween = TweenMax.to(position, 2, newPosition);
+    // add the tween to the box timeline
+    boxTimeline.add(positionTween);
+  }
+}
+// call the moveBoxes function
+moveBoxes();
+</script>
+    </head>
+    
+</html>
+
+
+
+
+
+

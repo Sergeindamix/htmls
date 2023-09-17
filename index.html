@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Incluye three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r118/three.min.js"></script>
+    <title>three.js</title>
+</head>
+<body>
+    
+
+<!-- Crea un canvas HTML -->
+<canvas id="canvas"></canvas>
+
+<script>
+    // Crea una escena y una cámara
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    // Crea un renderer y añádelo al canvas
+    var renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Crea un cubo y añádelo a la escena
+    var geometry = new THREE.BoxGeometry(1, 1, 1);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    var cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+    // Mueve la cámara hacia atrás
+    camera.position.z = 15;
+
+    // Carga el shader de Shadertoy
+    var shaderURL = 'https://www.shadertoy.com/view/Nlcczf';
+    fetch(shaderURL)
+        .then(response => response.text())
+        .then(shader => {
+            // Crea un material con el shader
+            var material = new THREE.ShaderMaterial({
+                uniforms: {
+                    u_time: { value: 1.0 },
+                    u_resolution: { value: new THREE.Vector2() }
+                },
+                fragmentShader: shader
+            });
+
+            // Aplica el material al cubo
+            cube.material = material;
+
+            // Dibuja el cuadro
+            function render() {
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            }
+            render();
+        });
+</script>
+
+</body>
+</html>

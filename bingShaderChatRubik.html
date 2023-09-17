@@ -1,0 +1,137 @@
+
+<html>
+    <head>
+        <!-- include the three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- create a div element for the renderer -->
+<div id="container"></div>
+<iframe src="https://assets.pinterest.com/ext/embed.html?id=643874077996645194" height="284" width="345" frameborder="0" scrolling="no" ></iframe>
+<script>
+// create a scene
+var scene = new THREE.Scene();
+// create a camera
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+// create a renderer
+var renderer = new THREE.WebGLRenderer();
+// set the size of the renderer
+renderer.setSize(window.innerWidth, window.innerHeight);
+// add the renderer to the document body
+document.body.appendChild(renderer.domElement);
+// create a box geometry
+var geometry = new THREE.BoxGeometry(5, 5, 5);
+// create a basic material with a white color
+var material = new THREE.MeshBasicMaterial({color: 0xffffff});
+// create a mesh
+var cube = new THREE.Mesh(geometry, material);
+// add the mesh to the scene
+scene.add(cube);
+// set the position of the camera
+camera.position.z = 20;
+// create an ambient light
+var ambientLight = new THREE.AmbientLight(0x404040);
+// add the ambient light to the scene
+scene.add(ambientLight);
+// create a directional light
+var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+// set the position of the directional light
+directionalLight.position.set(1, 1, 1);
+// add the directional light to the scene
+scene.add(directionalLight);
+// create a function to create the faces of the cube
+function createFaces() {
+  // create an array to store the colors
+  var colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff];
+  // create an array to store the faces
+  var faces = [];
+  // loop 6 times
+  for (var i = 0; i < 6; i++) {
+    // create a plane geometry
+    var geometry = new THREE.PlaneGeometry(4.5, 4.5);
+    // create a basic material with the color
+    var material = new THREE.MeshBasicMaterial({color: colors[i]});
+    // create a mesh
+    var face = new THREE.Mesh(geometry, material);
+    // add the mesh to the cube
+    cube.add(face);
+    // push the face to the array
+    faces.push(face);
+  }
+  // set the position and rotation of the faces
+  faces[0].position.z = 2.5;
+  faces[1].position.z = -2.5;
+  faces[1].rotation.y = Math.PI;
+  faces[2].position.x = 2.5;
+  faces[2].rotation.y = Math.PI / 2;
+  faces[3].position.x = -2.5;
+  faces[3].rotation.y = -Math.PI / 2;
+  faces[4].position.y = 2.5;
+  faces[4].rotation.x = -Math.PI / 2;
+  faces[5].position.y = -2.5;
+  faces[5].rotation.x = Math.PI / 2;
+  // return the array
+  return faces;
+}
+// create the faces of the cube
+var faces = createFaces();
+// create a function to rotate a layer of the cube
+function rotateLayer(axis, index, angle) {
+  // create a group
+  var group = new THREE.Group();
+  // add the group to the scene
+  scene.add(group);
+  // loop through the faces
+  for (var i = 0; i < faces.length; i++) {
+    // get the current face
+    var face = faces[i];
+    // get the position of the face
+    var position = face.position;
+    // check if the face is in the layer
+    if (position[axis] === index * 2.5) {
+      // add the face to the group
+      group.add(face);
+    }
+  }
+  // create a tween for the rotation
+  var rotation = {};
+  rotation[axis] = angle;
+  var rotationTween = TweenMax.to(group.rotation, 1, rotation);
+  // create a callback function to remove the group
+  function removeGroup() {
+    // loop through the group children
+    for (var i = 0; i < group.children.length; i++) {
+      // get the current child
+      var child = group.children[i];
+      // remove the child from the group
+      group.remove(child);
+      // add the child to the cube
+      cube.add(child);
+    }
+    // remove the group from the scene
+    scene.remove(group);
+  }
+  // add the callback function to the tween
+  rotationTween.onComplete(removeGroup);
+}
+// create a function to animate the scene
+function animate() {
+  // request the next animation frame
+  requestAnimationFrame(animate);
+  // render the scene
+  renderer.render(scene, camera);
+}
+// call the animate function
+animate();
+// test the rotateLayer function
+rotateLayer('x', 1, Math.PI / 2);
+</script>
+    </head>
+    <body>
+      
+    </body>
+</html>
+
+
+
+
+
+

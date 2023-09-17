@@ -1,0 +1,54 @@
+
+<html>
+    <head>
+        <!-- include the three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- create a div element for the renderer -->
+<div id="container"></div>
+<script>
+// create a scene
+var scene = new THREE.Scene();
+// create a camera
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+// create a renderer
+var renderer = new THREE.WebGLRenderer();
+// set the size of the renderer
+renderer.setSize(window.innerWidth, window.innerHeight);
+// add the renderer to the document body
+document.body.appendChild(renderer.domElement);
+// create a box geometry
+var geometry = new THREE.BoxGeometry(5, 5, 5);
+// create a texture loader
+var loader = new THREE.TextureLoader();
+// load the texture
+var texture = loader.load('https://source.unsplash.com/random/' + Math.random());
+// create a basic material with the texture
+var material = new THREE.MeshBasicMaterial({map: texture});
+// create a mesh
+var cube = new THREE.Mesh(geometry, material);
+// add the mesh to the scene
+scene.add(cube);
+// set the position of the camera
+camera.position.z = 20;
+// create a function to animate the scene
+function animate() {
+  // request the next animation frame
+  requestAnimationFrame(animate);
+  // rotate the cube
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  // render the scene
+  renderer.render(scene, camera);
+}
+// call the animate function
+animate();
+</script>
+    </head>
+    
+</html>
+
+
+
+
+
+

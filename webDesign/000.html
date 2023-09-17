@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+
+        
+        // Create a plane geometry to render the shader on
+const planeGeometry = new THREE.PlaneGeometry(2, 2);
+const renderer = new THREE.WebGLRenderer();
+const scene = new THREE.Scene();
+// Create a ShaderMaterial and set its uniforms and vertex shader
+const shaderMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    resolution: { value: new THREE.Vector2() },
+  },
+  vertexShader: `
+    void main() {
+      gl_Position = vec4(position, 1.0);
+    }
+  `,
+});
+
+// Load the fragment shader code and set it as the material's fragment shader
+const fragmentShader = `
+  uniform vec2 resolution;
+  
+  void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    gl_FragColor = vec4(uv, 0.0, 1.0);
+  }
+`;
+
+shaderMaterial.fragmentShader = fragmentShader;
+
+// Create a mesh with the plane geometry and ShaderMaterial
+const planeMesh = new THREE.Mesh(planeGeometry, shaderMaterial);
+
+// Set the resolution uniform based on the renderer's size
+shaderMaterial.uniforms.resolution.value.x = renderer.domElement.width;
+shaderMaterial.uniforms.resolution.value.y = renderer.domElement.height;
+
+// Add the mesh to the scene
+scene.add(planeMesh);
+    </script>
+</body>
+</html>

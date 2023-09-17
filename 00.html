@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test</title>
+</head>
+<body>
+    <input type="text" id="videoLinkInput" placeholder="Pega el enlace de YouTube aquí">
+
+<ol id="playlist"></ol>
+
+<script>
+const videoLinkInput = document.getElementById("videoLinkInput");
+const playlist = document.getElementById("playlist");
+
+videoLinkInput.addEventListener("input", () => {
+  const url = videoLinkInput.value.trim();
+  const playlistId = getPlaylistIdFromUrl(url);
+
+  if (playlistId) {
+    loadPlaylist(playlistId);
+  } else {
+    clearPlaylist();
+  }
+});
+
+function getPlaylistIdFromUrl(url) {
+  const params = new URLSearchParams(new URL(url).search);
+  return params.get("list");
+}
+
+function loadPlaylist(playlistId) {
+  clearPlaylist();
+
+  fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=AIzaSyCyYq3aWzXK-sE8surQuxZxCI2bZTzZtZA`)
+    .then(response => response.json())
+    .then(data => {
+      const playlistTitle = data.items[0].snippet.title;
+      const playlistThumbnails = data.items[0].snippet.thumbnails;
+      const playlistItemsUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistId}&key=AIzaSyCyYq3aWzXK-sE8surQuxZxCI2bZTzZtZA`;
+
+      document.title = playlistTitle;
+      playlist.appendChild(document.createElement("h1")).textContent = playlistTitle;
+
+      fetchPlaylistItems(playlistItemsUrl);
+    })
+    .catch(error => console.error(error));
+}
+
+function fetchPlaylistItems(url, pageToken) {
+  if (pageToken) {
+    url += `&pageToken=${pageToken}`;
+  }
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const playlistItems = data.items;
+      const nextPageToken = data.nextPageToken;
+
+      
+
+      playlistItems.forEach(item => {
+        const videoId = item.snippet.resourceId.videoId;
+        const videoTitle = item.snippet.title;
+        const videoThumbnailUrl = item.snippet.thumbnails.default.url;
+
+        const li = playlist.appendChild(document.createElement("li"));
+        const img = li.appendChild(document.createElement("img"));
+        const a = li.appendChild(document.createElement("a"));
+
+        img.src = videoThumbnailUrl;
+        a.href = `https://www.youtube.com/watch?v=${videoId}`;
+        a.target = "_blank";
+        a.textContent = videoTitle;
+      });
+
+      if (nextPageToken) {
+        fetchPlaylistItems(url, nextPageToken);
+      }
+    })
+    .catch(error => console.error(error));
+}
+
+function clearPlaylist() {
+  document.title = "YouTube Playlist";
+  playlist.innerHTML = "";
+}
+</script>
+
+</body>
+</html>

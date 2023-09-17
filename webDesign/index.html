@@ -1,0 +1,136 @@
+
+<html>
+  <style>
+    nav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav li {
+  float: left;
+}
+
+nav a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background-color: #111;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+header {
+  background-image: url(https://source.unsplash.com/random/);
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-shadow: 2px 2px #333;
+}
+
+header h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+header p {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+article {
+  background-color: #f2f2f2;
+  padding: 50px;
+  margin: 50px;
+  box-shadow: 2px 2px #333;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+  </style>
+    <head>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+// var unsplash = 'https://source.unsplash.com/random/';
+// var width = window.innerWidth;
+// var height = window.innerHeight;
+// var url = unsplash + width + 'x' + height;
+// document.body.style.backgroundImage = 'url("' + url + '")';
+// document.body.style.backgroundRepeat = 'no-repeat';
+// document.body.style.backgroundSize = 'cover';
+
+var miBoton = document.createElement('button');
+miBoton.id = 'miBoton';
+miBoton.innerHTML = 'Ir a la siguiente página';
+document.body.appendChild(miBoton);
+
+miBoton.style.backgroundColor = 'blue';
+miBoton.style.color = 'white';
+miBoton.style.padding = '10px 20px';
+miBoton.style.borderRadius = '5px';
+miBoton.style.cursor = 'pointer';
+miBoton.addEventListener('mouseover', function() {
+  miBoton.style.backgroundColor = 'lightblue';
+});
+miBoton.addEventListener('mouseout', function() {
+  miBoton.style.backgroundColor = 'blue';
+});
+miBoton.addEventListener('click', function() {
+  window.location.href = 'landingPage.html';
+});
+
+
+});
+        </script>
+    </head>
+    <body style="margin: 0;">
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <header>
+        <h1>Welcome to my website</h1>
+        <p>This is a sample hero section</p>
+      </header>
+      
+      <article>
+        <h2>About me</h2>
+        <p>I am a web developer with experience in HTML, CSS, and JavaScript. I love creating dynamic and engaging websites that provide a great user experience.</p>
+        <p>In my free time, I enjoy reading about the latest web technologies and trying out new tools and frameworks.</p>
+      </article>
+      
+      <footer>
+        <p>Copyright © 2023 My Website</p>
+      </footer>
+      
+      </body>
+</html>

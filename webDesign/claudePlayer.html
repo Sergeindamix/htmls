@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Cargar lista de reproducción de video</title>
+</head>
+<body>
+
+<h1>Cargar lista de reproducción de video</h1>
+
+<input type="file" id="fileSelector" accept=".txt, .json">
+
+<script>
+let fileSelector = document.getElementById("fileSelector");
+fileSelector.addEventListener("change", (e) => {
+  let file = e.target.files[0];
+  let reader = new FileReader();
+  reader.readAsText(file);
+  
+  reader.onload = function(e) {
+    let playlist = JSON.parse(e.target.result);
+    
+    for (let video of playlist) {
+      // Obtener la información del video
+      let {source, videoId, url} = video; 
+      
+      if (source == "YouTube") {
+        // Mostrar reproductor de YouTube con el ID del video
+        let youtubeIframe = document.createElement("iframe");
+        youtubeIframe.src = "https://www.youtube.com/embed/" + id;
+        youtubeIframe.width = 560;
+        youtubeIframe.height = 315;
+        document.body.append(youtubeIframe);
+      } 
+      else if (source == "Drive") {
+        // Generar URL de descarga de Google Drive con el ID del video
+        url = "https://drive.google.com/uc?id=" + id + "&export=download";
+        
+        // Mostrar enlace de descarga
+        let downloadLink = document.createElement("a");
+        downloadLink.href = url;
+        downloadLink.innerText = "Descargar video de Google Drive";
+        document.body.append(downloadLink);
+      }
+      // Manejar otras fuentes como Mega agregando más condicionales
+    }
+  }
+});
+</script>
+
+</body>
+</html>

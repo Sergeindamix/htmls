@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="glCanvas"></canvas>
+<script>
+    const canvas = document.getElementById("glCanvas");
+const gl = canvas.getContext("webgl");
+
+// Shader sources
+const vertexShaderSource = `
+  attribute vec4 aVertexPosition;
+  varying vec2 vTexCoord;
+
+  uniform float uTime;
+varying float vTime;
+
+void main() {
+    gl_Position = aVertexPosition;
+    vTexCoord = (aVertexPosition.xy + 1.0) / 2.0;
+    vTime = uTime;
+}
+`;
+
+const fragmentShaderSource = `
+  precision highp float;
+  uniform sampler2D uTex1;
+  uniform sampler2D uTex2;
+  uniform sampler2D uTex3;
+  uniform sampler2D uTex4;
+  varying vec2 vTexCoord;
+  varying float vTime;
+
+  void main() {
+    float t = 
+    vec4 color1 = texture2D(uTex1, vTexCoord);
+    vec4 color2 = texture2D(uTex2, vTexCoord);
+    vec4 color3 = texture2D(uTex3, vTexCoord);
+    vec4 color4 = texture2D(uTex4, vTexCoord);
+    gl_FragColor = (color1 + color2 + color3 + color4) * (1.0 + sin(vTime));
+  }
+`;
+
+// Create shaders
+const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+// Set shader sources
+gl.shaderSource(vertexShader, vertexShaderSource);
+gl.shaderSource(fragmentShader, fragmentShaderSource);
+
+
+// Compile shaders
+gl.compileShader(vertexShader);
+gl.compileShader(fragmentShader);
+
+// Check if shaders compiled successfully
+if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+    console.error("Error compiling vertex shader: " + gl.getShaderInfoLog(vertexShader));
+    return;
+}
+
+if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+    console.error("Error compiling fragment shader: " + gl.getShaderInfoLog(fragmentShader));
+    return;
+}
+
+// Create program
+const program = gl.createProgram();
+
+// Attach shaders
+gl.attachShader(program, vertexShader);
+gl.attachShader(program, fragmentShader);
+
+// Link program
+gl.linkProgram(program);
+
+// Use program
+gl.useProgram(program);
+
+// Define square vertices
+const squareVertices = [
+  -1.0, 1.0, 0.0,
+   1.0, 1.0, 0.0,
+  -1.0, -1.0, 0.0,
+   1.0, -1.0, 0.0
+];
+
+// Create buffer
+const squareVertexBuffer = gl.createBuffer();
+
+//// Bind buffer
+gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexBuffer);
+
+// Set buffer data
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(squareVertices), gl.STATIC_DRAW);
+
+// Get attribute location
+const aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
+
+// Enable attribute
+gl.enableVertexAttribArray(aVertexPosition);
+
+// Set attribute pointer
+gl.vertexAttribPointer(aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+
+// Create textures
+const textures = [];
+
+// Load images
+const images = [
+"https://source.unsplash.com/random/?city,night",
+"https://source.unsplash.com/random/?city,night",
+"https://source.unsplash.com/random/?city,night",
+"https://source.unsplash.com/random/?city,night",
+    
+];
+
+images.forEach((imageSrc, i) => {
+    const image = new Image();
+    image.src = imageSrc;
+    image.onload = function() {
+        const texture = gl.createTexture();
+        textures.push(texture);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.generateMipmap(gl.TEXTURE_2D);
+    }
+});
+
+// Get uniform// Get uniform locations
+const uTex1 = gl.getUniformLocation(program, "uTex1");
+const uTex2 = gl.getUniformLocation(program, "uTex2");
+const uTex3 = gl.getUniformLocation(program, "uTex3");
+const uTex4 = gl.getUniformLocation(program, "uTex4");
+
+// Set active texture and bind texture
+for (let i = 0; i < 4; i++) {
+    gl.activeTexture(gl.TEXTURE0 + i);
+    gl.bindTexture(gl.TEXTURE_2D, textures[i]);
+}
+
+// Set uniform values
+gl.uniform1i(uTex1, 0);
+gl.uniform1i(uTex2, 1);
+gl.uniform1i(uTex3, 2);
+gl.uniform1i(uTex4, 3);
+
+// Clear canvas
+gl.clearColor(0, 0, 0, 1);
+gl.clear(gl.COLOR_BUFFER_BIT);
+
+// Draw square
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+let time = 0;
+const uTime = gl.getUniformLocation(program, "uTime");
+
+function render() {
+    time += 0.01;
+    gl.uniform1f(uTime, time);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+requestAnimationFrame(render);
+}
+
+render();
+
+
+
+</script>
+</body>
+</html>

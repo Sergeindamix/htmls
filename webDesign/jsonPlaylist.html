@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reproductor de JSON Playlist</title>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+<body>
+  <h1>Reproductor de JSON Playlist</h1>
+  
+  <div id="player"></div>
+  <select id="playlist"></select>
+
+  <script>
+    // Variables globales para el reproductor y el desplegable de la playlist
+    let player;
+    const playlist = document.getElementById('playlist');
+    
+    // Cargar la lista de videos desde el archivo JSON
+    fetch('playlist.json')
+      .then(response => response.json())
+      .then(data => {
+        // Recorrer los videos y agregar opciones al desplegable
+        data.forEach(video => {
+          const option = document.createElement('option');
+          option.value = video.videoId;
+          option.textContent = video.title;
+          playlist.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Error al cargar la lista de videos:', error));
+
+    // Evento change para cargar el video seleccionado
+    playlist.addEventListener('change', () => {
+      const selectedVideoId = playlist.value;
+      loadVideo(selectedVideoId);
+    });
+
+    // Función para cargar un video en el reproductor
+    function loadVideo(videoId) {
+      if (player) {
+        player.loadVideoById(videoId);
+      } else {
+        player = new YT.Player('player', {
+          height: '360',
+          width: '640',
+          videoId: videoId,
+          events: {
+            onReady: () => {
+              player.playVideo();
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

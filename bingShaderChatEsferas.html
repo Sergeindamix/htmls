@@ -1,0 +1,82 @@
+
+<html>
+    <head>
+        <!-- include the three.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- create a div element for the renderer -->
+<div id="container"></div>
+<script>
+// create a scene
+var scene = new THREE.Scene();
+// create a camera
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+// create a renderer
+var renderer = new THREE.WebGLRenderer();
+// set the size of the renderer
+renderer.setSize(window.innerWidth, window.innerHeight);
+// add the renderer to the document body
+document.body.appendChild(renderer.domElement);
+// create an array to store the spheres
+var spheres = [];
+// create a function to generate a random color
+function randomColor() {
+  // return a hexadecimal color
+  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+}
+// create a function to create a sphere
+function createSphere() {
+  // create a sphere geometry
+  var geometry = new THREE.SphereGeometry(1, 32, 32);
+  // create a texture loader
+var loader = new THREE.TextureLoader();
+// load the texture
+var texture = loader.load('https://source.unsplash.com/random/' + Math.random());
+// create a basic material with the texture
+var material = new THREE.MeshBasicMaterial({map: texture});
+  // create a mesh
+  var sphere = new THREE.Mesh(geometry, material);
+  // set the position of the sphere randomly
+  sphere.position.x = Math.random() * 20 - 10;
+  sphere.position.y = Math.random() * 20 - 10;
+  sphere.position.z = Math.random() * 20 - 10;
+  // add the sphere to the scene
+  scene.add(sphere);
+  // add the sphere to the array
+  spheres.push(sphere);
+}
+// create 100 spheres
+for (var i = 0; i < 100; i++) {
+  createSphere();
+}
+// set the position of the camera
+camera.position.z = 20;
+// create a function to animate the scene
+function animate() {
+  // request the next animation frame
+  requestAnimationFrame(animate);
+  // loop through the spheres
+  for (var i = 0; i < spheres.length; i++) {
+    // get the current sphere
+    var sphere = spheres[i];
+    // move the sphere randomly
+    sphere.position.x += Math.random() * 0.1 - 0.05;
+    sphere.position.y += Math.random() * 0.1 - 0.05;
+    sphere.position.z += Math.random() * 0.1 - 0.05;
+    // change the color of the sphere randomly
+    sphere.material.color.set(randomColor());
+  }
+  // render the scene
+  renderer.render(scene, camera);
+}
+// call the animate function
+animate();
+</script>
+    </head>
+    
+</html>
+
+
+
+
+
+

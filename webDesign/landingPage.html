@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* Estilos de la página */
+      body {
+        background-color: #2b2b2b;
+        font-family: "Arial", sans-serif;
+        color: #fff;
+        text-align: center;
+      }
+
+      nav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav li {
+  float: left;
+}
+
+nav a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background-color: #111;
+}
+      
+      /* Estilos del hero */
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      /* Estilos para los títulos */
+      h1, h2, h3 {
+        color: #ff0080;
+        text-shadow: 1px 1px #333;
+      }
+      
+      /* Estilos para los botones */
+      .btn {
+        background-color: #ff0080;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 20px;
+        box-shadow: 1px 1px #333;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      
+      /* Estilos para los botones al pasar el cursor */
+      .btn:hover {
+        transform: scale(1.1);
+        box-shadow: 2px 2px #333;
+        cursor: pointer;
+      }
+      
+      /* Estilos para los bloques geométricos */
+      .geometric-block {
+        width: 200px;
+        height: 200px;
+        margin: 20px;
+        display: inline-block;
+        background-color: #ff0080;
+        transform: skew(-15deg);
+        box-shadow: 1px 1px #333;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+        <ul>
+          <li><a href="galeriaGrid.html">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Welcome to the Cyberpunk World</h1>
+      <h2>Get ready for a neon adventure</h2>
+      <a href="#" class="btn">Explore Now</a>
+    </section>
+    
+    <!-- Artículo -->
+    <article>
+      <h3>Discover the future</h3>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+        Sed commodo est quis neque faucibus, et dictum enim tincidunt. 
+      </p>
+      
+      <!-- Bloques geométricos -->
+      <div class="geometric-block"></div>
+      <div class="geometric-block"></div>
+      <div class="geometric-block"></div>
+    </article>
+    
+    <!-- Footer -->
+    <footer>
+      <p>
+        &copy; 2023 Cyberpunk Land. All rights reserved.
+      </p>
+    </footer>
+  </body>
+</html>
